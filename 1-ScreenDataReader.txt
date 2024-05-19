@@ -1,0 +1,35 @@
+Sub ReadDataFromScreen()
+    ' Declare the necessary variables
+    Dim wordApp As Object
+    Dim wordDoc As Object
+    Dim firstParagraph As String
+    
+    ' Create a new instance of Word application
+    On Error Resume Next ' If Word is not open, the error will be handled.
+    Set wordApp = GetObject(, "Word.Application")
+    If Err.Number <> 0 Then
+        Err.Clear
+        ' If Word is not open, inform the user
+        MsgBox "Word is not running. Please open Word with the document."
+        Exit Sub
+    End If
+    On Error GoTo 0 ' Turn off error handling
+    
+    ' Set the document from which to read
+    Set wordDoc = wordApp.ActiveDocument
+    
+    ' Check if the document is open
+    If Not wordDoc Is Nothing Then
+        ' Read the first paragraph from the active document
+        firstParagraph = wordDoc.Paragraphs(1).Range.Text
+        ' Output the text in Excel
+        ThisWorkbook.Sheets(1).Range("A1").Value = firstParagraph
+        MsgBox "Data read successfully from Word!"
+    Else
+        MsgBox "No document is active in Word."
+    End If
+    
+    ' Clean up
+    Set wordDoc = Nothing
+    Set wordApp = Nothing
+End Sub
